@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MouseMind.App/MouseMind.App.csproj" />
+  </Folder>
+</Solution>

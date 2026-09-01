@@ -1,0 +1,90 @@
+<Window x:Class="MouseMind.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MouseMind · 灵触" Height="760" Width="1180" MinHeight="660" MinWidth="980"
+        WindowStartupLocation="CenterScreen" Background="#0B0C12">
+    <Window.Resources>
+        <SolidColorBrush x:Key="Panel" Color="#141620"/>
+        <SolidColorBrush x:Key="Panel2" Color="#1B1E2B"/>
+        <SolidColorBrush x:Key="TextMain" Color="#F6F7FB"/>
+        <SolidColorBrush x:Key="TextDim" Color="#969BAD"/>
+        <SolidColorBrush x:Key="Purple" Color="#7C5CFC"/>
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="White"/><Setter Property="Background" Value="#292D3D"/>
+            <Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="16,10"/>
+            <Setter Property="Cursor" Value="Hand"/><Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+                <Border Background="{TemplateBinding Background}" CornerRadius="9" Padding="{TemplateBinding Padding}">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+            </ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style TargetType="TextBlock"><Setter Property="Foreground" Value="{StaticResource TextMain}"/></Style>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource Panel2}"/><Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="16"/><Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="250"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+        <Border Grid.Column="0" Background="#10121A" Padding="20">
+            <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,28">
+                    <Border Width="38" Height="38" CornerRadius="11" Background="{StaticResource Purple}">
+                        <TextBlock Text="M" FontSize="21" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Margin="11,0,0,0"><TextBlock Text="MouseMind" FontSize="18" FontWeight="Bold"/><TextBlock Text="智能鼠标控制中心" Foreground="{StaticResource TextDim}" FontSize="11"/></StackPanel>
+                </StackPanel>
+                <TextBlock Grid.Row="1" Text="应用配置" Foreground="{StaticResource TextDim}" FontWeight="SemiBold" Margin="2,0,0,10"/>
+                <ListBox Grid.Row="2" x:Name="ProfileList" Background="Transparent" BorderThickness="0" SelectionChanged="ProfileList_SelectionChanged">
+                    <ListBox.ItemContainerStyle><Style TargetType="ListBoxItem"><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,0,0,6"/><Setter Property="Background" Value="Transparent"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style></ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate><DataTemplate><Border Background="#1A1D28" CornerRadius="10" Padding="12">
+                        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="5"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Background="{Binding Accent}" CornerRadius="3"/>
+                            <StackPanel Grid.Column="1" Margin="11,0,0,0"><TextBlock Text="{Binding Name}" FontWeight="SemiBold"/><TextBlock Text="{Binding MappingSummary}" Foreground="{StaticResource TextDim}" FontSize="11" Margin="0,3,0,0"/></StackPanel>
+                        </Grid>
+                    </Border></DataTemplate></ListBox.ItemTemplate>
+                </ListBox>
+                <Button Grid.Row="3" Content="＋ 新建应用配置" Click="AddProfile_Click"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="30,25,30,25">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="170"/></Grid.RowDefinitions>
+            <Grid>
+                <StackPanel><TextBlock x:Name="ProfileTitle" Text="浏览与阅读" FontSize="30" FontWeight="Bold"/><TextBlock x:Name="ProfileSubtitle" Text="根据前台应用自动激活" Foreground="{StaticResource TextDim}" Margin="0,7,0,0"/></StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Border Background="#172B28" CornerRadius="10" Padding="12,8" Margin="0,0,10,0"><StackPanel Orientation="Horizontal"><Ellipse x:Name="LiveDot" Width="8" Height="8" Fill="#39D6B4" Margin="0,0,8,0"/><TextBlock x:Name="MonitorText" Text="监听已开启" Foreground="#79E7CF" FontWeight="SemiBold"/></StackPanel></Border>
+                    <Button x:Name="MonitorButton" Content="暂停监听" Click="MonitorButton_Click" Background="#7C5CFC"/>
+                </StackPanel>
+            </Grid>
+
+            <Border Grid.Row="1" Background="#151824" CornerRadius="13" Padding="18" Margin="0,25,0,18">
+                <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <StackPanel><TextBlock Text="当前前台应用" Foreground="{StaticResource TextDim}"/><TextBlock x:Name="ForegroundAppText" Text="等待鼠标事件…" FontSize="17" FontWeight="SemiBold" Margin="0,5,0,0"/></StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"><TextBlock Text="配置状态" Foreground="{StaticResource TextDim}" VerticalAlignment="Center" Margin="0,0,10,0"/><CheckBox x:Name="ProfileEnabled" IsChecked="True" Checked="ProfileEnabled_Changed" Unchecked="ProfileEnabled_Changed"/></StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="2"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+                <Grid><TextBlock Text="动作映射" FontSize="19" FontWeight="Bold"/><Button Content="＋ 添加动作" HorizontalAlignment="Right" Padding="13,7" Click="AddMapping_Click"/></Grid>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,14,0,12"><ItemsControl x:Name="MappingList">
+                    <ItemsControl.ItemTemplate><DataTemplate><Border Style="{StaticResource Card}"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="150"/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <Border Background="#24283A" CornerRadius="8" Padding="10,7" HorizontalAlignment="Left"><TextBlock Text="{Binding Trigger}" FontWeight="SemiBold"/></Border>
+                        <StackPanel Grid.Column="1" Margin="15,0"><TextBlock Text="{Binding Action}" FontSize="15" FontWeight="SemiBold"/><TextBlock Text="{Binding Description}" Foreground="{StaticResource TextDim}" Margin="0,4,0,0"/></StackPanel>
+                        <Button Grid.Column="2" Content="测试" Padding="13,7" Tag="{Binding}" Click="TestAction_Click"/>
+                    </Grid></Border></DataTemplate></ItemsControl.ItemTemplate>
+                </ItemsControl></ScrollViewer>
+            </Grid>
+
+            <Border Grid.Row="3" Background="#11131C" CornerRadius="13" Padding="17">
+                <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+                    <Grid><TextBlock Text="实时事件" FontWeight="Bold"/><Button Content="清空" HorizontalAlignment="Right" Padding="10,4" Click="ClearLog_Click"/></Grid>
+                    <ListBox Grid.Row="1" x:Name="EventLog" Background="Transparent" BorderThickness="0" Foreground="#B9BECC" FontFamily="Consolas" FontSize="12" Margin="0,8,0,0"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
+
