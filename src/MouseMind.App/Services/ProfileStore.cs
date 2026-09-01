@@ -19,7 +19,11 @@ public sealed class ProfileStore
             {
                 await using var input = File.OpenRead(_path);
                 var profiles = await JsonSerializer.DeserializeAsync<ObservableCollection<MouseProfile>>(input);
-                if (profiles is { Count: > 0 }) return profiles;
+                if (profiles is { Count: > 0 })
+                {
+                    Normalize(profiles);
+                    return profiles;
+                }
             }
             catch { /* 损坏配置回退到内置预设。 */ }
         }
@@ -51,8 +55,8 @@ public sealed class ProfileStore
             Name = "代码工作台", ProcessName = "Code", Accent = "#21C7A8",
             Mappings =
             [
-                new() { Trigger = "侧键 1", Action = "解释代码", Description = "解释当前选择" },
-                new() { Trigger = "侧键 2", Action = "快速修复", Description = "生成修复建议" }
+                new() { Trigger = "侧键 1", Action = "打开命令面板", Description = "发送 Ctrl+Shift+P", ActionType = "KeyboardShortcut", Payload = "Ctrl+Shift+P" },
+                new() { Trigger = "侧键 2", Action = "撤销", Description = "发送 Ctrl+Z", ActionType = "KeyboardShortcut", Payload = "Ctrl+Z" }
             ]
         },
         new()
@@ -66,5 +70,17 @@ public sealed class ProfileStore
             ]
         }
     ];
-}
 
+    private static void Normalize(IEnumerable<MouseProfile> profiles)
+    {
+        foreach (var mapping in profiles.SelectMany(x => x.Mappings))
+        {
+            if (!string.IsNullOrWhiteSpace(mapping.Payload)) continue;
+            if (mapping.Action.Contains("撤销", StringComparison.OrdinalIgnoreCase))
+            {
+                mapping.ActionType = "KeyboardShortcut";
+                mapping.Payload = "Ctrl+Z";
+            }
+        }
+    }
+}

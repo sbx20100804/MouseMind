@@ -11,6 +11,7 @@ public partial class MainWindow : Window
 {
     private readonly ProfileStore _store = new();
     private readonly MouseHookService _mouseHook = new();
+    private readonly ActionExecutionService _actions = new([new KeyboardShortcutExecutor()]);
     private ObservableCollection<MouseProfile> _profiles = [];
     private MouseProfile? _selectedProfile;
 
@@ -58,9 +59,9 @@ public partial class MainWindow : Window
         else { StartMonitoring(); AddLog("全局鼠标监听已开启。", "SYSTEM"); }
     }
 
-    private void MouseHook_SideButtonPressed(object? sender, MouseSideButtonEventArgs e)
+    private async void MouseHook_SideButtonPressed(object? sender, MouseSideButtonEventArgs e)
     {
-        Dispatcher.Invoke(() =>
+        await Dispatcher.InvokeAsync(async () =>
         {
             ForegroundAppText.Text = e.ProcessName;
             var profile = FindProfile(e.ProcessName);
@@ -68,9 +69,15 @@ public partial class MainWindow : Window
             if (profile is not null)
             {
                 ProfileList.SelectedItem = profile;
-                AddLog(mapping is null
-                    ? $"{e.Button} · 匹配“{profile.Name}”，暂无对应动作"
-                    : $"{e.Button} → {mapping.Action} · {profile.Name}", "MOUSE");
+                if (mapping is null)
+                    AddLog($"{e.Button} · 匹配“{profile.Name}”，暂无对应动作", "MOUSE");
+                else
+                {
+                    AddLog($"{e.Button} → {mapping.Action} · {profile.Name}", "MOUSE");
+                    var result = await _actions.ExecuteAsync(mapping,
+                        new ActionContext(e.ProcessName, DateTimeOffset.Now));
+                    AddLog(result.Message, result.Success ? "ACTION" : "SKIP");
+                }
             }
             else AddLog($"{e.Button} · {e.ProcessName} · 未匹配配置", "MOUSE");
         });
@@ -118,10 +125,14 @@ public partial class MainWindow : Window
         AddLog($"已向“{_selectedProfile.Name}”添加动作。", "CONFIG");
     }
 
-    private void TestAction_Click(object sender, RoutedEventArgs e)
+    private async void TestAction_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as Button)?.Tag is MouseMapping mapping)
-            AddLog($"测试成功：{mapping.Trigger} → {mapping.Action}", "TEST");
+        {
+            var result = await _actions.ExecuteAsync(mapping,
+                new ActionContext("MouseMind", DateTimeOffset.Now));
+            AddLog(result.Message, result.Success ? "TEST" : "SKIP");
+        }
     }
 
     private void ClearLog_Click(object sender, RoutedEventArgs e) => EventLog.Items.Clear();
@@ -134,4 +145,3 @@ public partial class MainWindow : Window
 
     private Task SaveAsync() => _store.SaveAsync(_profiles);
 }
-

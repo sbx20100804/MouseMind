@@ -6,6 +6,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <Version>0.2.0-alpha</Version>
+    <AssemblyVersion>0.2.0.0</AssemblyVersion>
+    <FileVersion>0.2.0.0</FileVersion>
+    <Authors>sbx20100804</Authors>
+    <Description>Context-aware mouse automation and AI workflow control center for Windows.</Description>
+    <RepositoryUrl>https://github.com/sbx20100804/MouseMind</RepositoryUrl>
   </PropertyGroup>
 
 </Project>

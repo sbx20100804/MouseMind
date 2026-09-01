@@ -19,5 +19,7 @@ public sealed class MouseMapping
     public string Trigger { get; set; } = "侧键 1";
     public string Action { get; set; } = "AI 总结选中文本";
     public string Description { get; set; } = "按下后执行动作";
+    public string ActionType { get; set; } = "Preview";
+    public string Payload { get; set; } = "";
+    public int CooldownMs { get; set; } = 500;
 }
-
