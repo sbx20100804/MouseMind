@@ -34,8 +34,11 @@ public sealed class ProfileStore
     public async Task SaveAsync(IEnumerable<MouseProfile> profiles)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(_path)!);
-        await using var output = File.Create(_path);
-        await JsonSerializer.SerializeAsync(output, profiles, new JsonSerializerOptions { WriteIndented = true });
+        var temporaryPath = _path + ".tmp";
+        await using (var output = File.Create(temporaryPath))
+            await JsonSerializer.SerializeAsync(output, profiles, new JsonSerializerOptions { WriteIndented = true });
+
+        File.Move(temporaryPath, _path, true);
     }
 
     private static ObservableCollection<MouseProfile> CreateDefaults() =>

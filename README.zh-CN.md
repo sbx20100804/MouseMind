@@ -21,8 +21,12 @@ MouseMind 是一个面向 Windows 的智能鼠标控制中心。它根据当前�
 | 视频剪辑 | 分割片段、逐帧移动 |
 | 文档编辑 | 润色、提取待办事项 |
 
-## Alpha 0.2 已实现
+## Alpha 0.3 · Prism 开发进度
 
+- 曜石玻璃高级桌面外壳与自定义窗口栏
+- 概览、应用配置、活动记录和设置导航
+- 可复用 WPF 设计令牌、组件与键盘焦点状态
+- 会话动作统计与最近活动概览
 - Windows 深色桌面控制中心
 - 全局监听标准鼠标侧键 XButton1/XButton2
 - 读取当前前台进程并匹配应用配置
@@ -53,7 +57,7 @@ dotnet run --project .\src\MouseMind.App\MouseMind.App.csproj
 
 ## 路线图
 
-- Alpha 0.3：完整配置编辑器、托盘、动作提示浮窗
+- Alpha 0.3：Prism 高级界面、完整配置编辑器、托盘、动作提示浮窗
 - Alpha 0.4：选中文字、翻译、总结和 AI Provider
 - Alpha 0.5：鼠标手势、环形菜单和动作链
 - Beta：插件 SDK、配置导入导出、安装包和自动更新
@@ -65,4 +69,3 @@ dotnet run --project .\src\MouseMind.App\MouseMind.App.csproj
 ## 许可证
 
 [MIT License](LICENSE)
-

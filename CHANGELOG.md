@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0-alpha - In development
+
+### Added
+- Prism premium desktop shell with custom window chrome.
+- Dashboard, profiles, activity and settings navigation.
+- Persistent Obsidian Glass design tokens and reusable WPF controls.
+- Session action counter and mirrored recent-activity summary.
+
+### Changed
+- Profile storage now uses atomic temporary-file replacement.
+- Monitoring state is available from both the header and sidebar.
+
 ## 0.2.0-alpha - 2026-09-01
 
 ### Added
@@ -20,4 +32,3 @@
 - Global side-button observation.
 - Foreground process and profile matching.
 - Local profile persistence and event log.
-

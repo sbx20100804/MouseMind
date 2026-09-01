@@ -21,8 +21,12 @@ Examples:
 | Video editor | Split a clip or move frame-by-frame |
 | Document editor | Rewrite text or extract tasks |
 
-## Implemented in Alpha 0.2
+## Alpha 0.3 · Prism progress
 
+- Premium Obsidian Glass desktop shell and custom window chrome
+- Dashboard, profiles, activity and settings navigation
+- Reusable WPF design tokens, controls and keyboard focus states
+- Session action metrics and recent-activity overview
 - Dark Windows desktop control center
 - Global XButton1/XButton2 listener
 - Foreground process detection and profile matching
@@ -55,7 +59,7 @@ The built-in Code Workspace profile maps side button 2 to `Ctrl+Z`. Alpha 0.2 ke
 
 ## Roadmap
 
-- Alpha 0.3: full profile editor, system tray and action toast
+- Alpha 0.3: Prism UI, full profile editor, system tray and action toast
 - Alpha 0.4: selected-text capture, translation, summarization and AI providers
 - Alpha 0.5: mouse gestures, radial menu and action chains
 - Beta: plugin SDK, profile import/export, installer and auto-update
@@ -67,4 +71,3 @@ Basic input mapping and profile matching run locally. Future AI features will cl
 ## License
 
 [MIT License](LICENSE)
-
