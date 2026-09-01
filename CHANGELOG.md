@@ -7,6 +7,9 @@
 - Dashboard, profiles, activity and settings navigation.
 - Persistent Obsidian Glass design tokens and reusable WPF controls.
 - Session action counter and mirrored recent-activity summary.
+- Context-signal orbit animation tied to real mouse input.
+- Restrained page transitions and action-result toasts.
+- Reduced-motion support through Windows animation preferences.
 
 ### Changed
 - Profile storage now uses atomic temporary-file replacement.

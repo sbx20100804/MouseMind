@@ -31,6 +31,9 @@ public partial class MainWindow : Window
         ProfileList.SelectedIndex = 0;
         StartMonitoring();
         AddLog("MouseMind 已启动，配置已从本地加载。", "SYSTEM");
+        MotionService.Reveal(OverviewPanel, 7);
+        MotionService.StartOrbit(SignalOrbit, 0, 360, 22);
+        MotionService.StartOrbit(SignalOrbitReverse, 360, 0, 16);
     }
 
     private void StartMonitoring()
@@ -68,6 +71,7 @@ public partial class MainWindow : Window
 
     private async void MouseHook_SideButtonPressed(object? sender, MouseSideButtonEventArgs e)
     {
+        MotionService.Pulse(SignalCore);
         ForegroundAppText.Text = e.ProcessName;
         DashboardAppText.Text = e.ProcessName;
         var profile = FindProfile(e.ProcessName);
@@ -84,6 +88,7 @@ public partial class MainWindow : Window
                     new ActionContext(e.ProcessName, DateTimeOffset.Now));
                 if (result.Success) IncrementSessionActions();
                 AddLog(result.Message, result.Success ? "ACTION" : "SKIP");
+                ShowActionToast(result.Success, mapping.Action, result.Message);
             }
         }
         else AddLog($"{e.Button} · {e.ProcessName} · 未匹配配置", "MOUSE");
@@ -140,6 +145,8 @@ public partial class MainWindow : Window
                 new ActionContext("MouseMind", DateTimeOffset.Now));
             if (result.Success) IncrementSessionActions();
             AddLog(result.Message, result.Success ? "TEST" : "SKIP");
+            MotionService.Pulse(SignalCore);
+            ShowActionToast(result.Success, mapping.Action, result.Message);
         }
     }
 
@@ -169,6 +176,14 @@ public partial class MainWindow : Window
     {
         if (sender is not Button { Tag: string destination }) return;
 
+        FrameworkElement nextPanel = destination switch
+        {
+            "Profiles" => ProfilesPanel,
+            "Activity" => ActivityPanel,
+            "Settings" => SettingsPanel,
+            _ => OverviewPanel
+        };
+
         OverviewPanel.Visibility = destination == "Overview" ? Visibility.Visible : Visibility.Collapsed;
         ProfilesPanel.Visibility = destination == "Profiles" ? Visibility.Visible : Visibility.Collapsed;
         ActivityPanel.Visibility = destination == "Activity" ? Visibility.Visible : Visibility.Collapsed;
@@ -186,6 +201,22 @@ public partial class MainWindow : Window
             "Settings" => ("设置", "调整 MouseMind 的行为、外观与数据。"),
             _ => ("概览", "你的鼠标工作流，正在安静运行。")
         };
+
+        MotionService.Reveal(nextPanel);
+    }
+
+    private void ShowActionToast(bool success, string title, string message)
+    {
+        ToastTitle.Text = success ? title : "动作未执行";
+        ToastMessage.Text = message;
+        ToastIcon.Data = Geometry.Parse(success ? "M7,15 L12,20 L22,9" : "M8,8 L22,22 M22,8 L8,22");
+        ToastIcon.Stroke = success
+            ? (Brush)FindResource("SuccessBrush")
+            : (Brush)FindResource("ErrorBrush");
+        ToastIconBackground.Fill = success
+            ? new SolidColorBrush(Color.FromArgb(0x24, 0x3E, 0xD2, 0xA9))
+            : new SolidColorBrush(Color.FromArgb(0x24, 0xF0, 0x78, 0x83));
+        MotionService.ShowToast(ActionToastHost);
     }
 
     private void SidebarMonitorSwitch_Click(object sender, RoutedEventArgs e)

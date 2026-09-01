@@ -143,8 +143,27 @@
     </Style>
     <Style x:Key="ActiveNavButton" TargetType="Button" BasedOn="{StaticResource NavButton}">
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="#282443"/>
+        <Setter Property="Background" Value="#211E36"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="9"
+                                BorderBrush="#247C6CF2" BorderThickness="1"/>
+                        <Border Width="3" Height="20" HorizontalAlignment="Left" Margin="1,0,0,0"
+                                Background="{StaticResource PrimaryHoverBrush}" CornerRadius="0,3,3,0">
+                            <Border.Effect><DropShadowEffect Color="#8172F3" BlurRadius="9" ShadowDepth="0" Opacity="0.55"/></Border.Effect>
+                        </Border>
+                        <ContentPresenter Margin="14,11" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#292541"/></Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="#A88172F3"/></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="IconButton" TargetType="Button">

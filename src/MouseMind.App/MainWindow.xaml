@@ -104,10 +104,14 @@
                                     </StackPanel>
                                     <Grid Grid.Column="1" Width="210" Height="150" Margin="28,0,6,0">
                                         <Ellipse Width="140" Height="140" Fill="#167C6CF2"/>
-                                        <Ellipse Width="94" Height="94" Stroke="#3A8172F3" StrokeThickness="1"/>
-                                        <Border Width="62" Height="86" CornerRadius="30" Background="#242A38" BorderBrush="#50FFFFFF" BorderThickness="1">
+                                        <Ellipse x:Name="SignalOrbit" Width="132" Height="132" Stroke="#4A8172F3" StrokeThickness="1"
+                                                 StrokeDashArray="2,10" StrokeStartLineCap="Round"/>
+                                        <Ellipse x:Name="SignalOrbitReverse" Width="98" Height="98" Stroke="#344ED6B1" StrokeThickness="1"
+                                                 StrokeDashArray="1,7" StrokeStartLineCap="Round"/>
+                                        <Border x:Name="SignalCore" Width="62" Height="86" CornerRadius="30" Background="#242A38" BorderBrush="#50FFFFFF" BorderThickness="1">
                                             <Grid><Path Data="M31,12 L31,39" Stroke="#BFB6FF" StrokeThickness="2"/><Ellipse Width="7" Height="13" Fill="{StaticResource PrimaryBrush}" VerticalAlignment="Top" Margin="0,15,0,0"/><Ellipse Width="8" Height="8" Fill="{StaticResource SuccessBrush}" VerticalAlignment="Bottom" Margin="0,0,0,14"/></Grid>
                                         </Border>
+                                        <TextBlock Text="INPUT SIGNAL" FontFamily="{StaticResource MonoFont}" FontSize="8" Foreground="#817E99" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -211,5 +215,23 @@
                 </Grid>
             </Grid>
         </Grid>
+
+        <!-- Premium action toast: one quiet, consistent feedback surface. -->
+        <Border x:Name="ActionToastHost" Grid.RowSpan="2" Panel.ZIndex="30" Visibility="Collapsed" Opacity="0"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,26,24" Width="340"
+                Background="#F21A1E29" BorderBrush="#24FFFFFF" BorderThickness="1" CornerRadius="13" Padding="15">
+            <Border.Effect><DropShadowEffect Color="#000000" BlurRadius="26" ShadowDepth="8" Opacity="0.42"/></Border.Effect>
+            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="38"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                <Grid Width="30" Height="30" VerticalAlignment="Top">
+                    <Ellipse x:Name="ToastIconBackground" Fill="#243ED2A9"/>
+                    <Path x:Name="ToastIcon" Data="M7,15 L12,20 L22,9" Stroke="{StaticResource SuccessBrush}" StrokeThickness="2"
+                          StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="18" Height="18" Stretch="Uniform"/>
+                </Grid>
+                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                    <Grid><TextBlock x:Name="ToastTitle" Text="动作完成" FontWeight="SemiBold"/><TextBlock Text="MOUSEMIND" HorizontalAlignment="Right" FontFamily="{StaticResource MonoFont}" FontSize="8" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/></Grid>
+                    <TextBlock x:Name="ToastMessage" Text="快捷键已发送到当前应用。" Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
