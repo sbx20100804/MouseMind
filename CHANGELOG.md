@@ -14,6 +14,7 @@
 ### Changed
 - Profile storage now uses atomic temporary-file replacement.
 - Monitoring state is available from both the header and sidebar.
+- Process matching is now exact, supports `.exe` suffixes, and recognizes `*` as a global profile.
 
 ## 0.2.0-alpha - 2026-09-01
 

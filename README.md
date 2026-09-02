@@ -5,6 +5,8 @@
 
 [简体中文](README.zh-CN.md) · [English](README.en.md)
 
+[Development roadmap and TODO](TODO.md)
+
 MouseMind turns standard mouse side buttons into application-aware actions. The same button can undo in a code editor, control a timeline in an editing app, or trigger an AI workflow in a browser.
 
 MouseMind 将标准鼠标侧键升级为能够感知当前应用的动作入口。同一个按键可以在代码编辑器中撤销、在剪辑软件中控制时间线，或在浏览器中触发 AI 工作流。

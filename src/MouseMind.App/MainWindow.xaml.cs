@@ -12,6 +12,7 @@ public partial class MainWindow : Window
     private readonly ProfileStore _store = new();
     private readonly MouseHookService _mouseHook = new();
     private readonly ActionExecutionService _actions = new([new KeyboardShortcutExecutor()]);
+    private readonly ProfileMatcher _profileMatcher = new();
     private ObservableCollection<MouseProfile> _profiles = [];
     private MouseProfile? _selectedProfile;
     private int _sessionActionCount;
@@ -94,9 +95,7 @@ public partial class MainWindow : Window
         else AddLog($"{e.Button} · {e.ProcessName} · 未匹配配置", "MOUSE");
     }
 
-    private MouseProfile? FindProfile(string processName) => _profiles.FirstOrDefault(p =>
-        p.IsEnabled && p.ProcessName.Split('/', StringSplitOptions.TrimEntries)
-            .Any(name => processName.Contains(name, StringComparison.OrdinalIgnoreCase)));
+    private MouseProfile? FindProfile(string processName) => _profileMatcher.Find(_profiles, processName);
 
     private void ProfileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
