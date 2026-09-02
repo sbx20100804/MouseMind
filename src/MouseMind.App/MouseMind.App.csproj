@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\MouseMind.Core\MouseMind.Core.csproj" />
+    <ProjectReference Include="..\MouseMind.Windows\MouseMind.Windows.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>

@@ -10,11 +10,19 @@
 - Context-signal orbit animation tied to real mouse input.
 - Restrained page transitions and action-result toasts.
 - Reduced-motion support through Windows animation preferences.
+- Sprint 1 Core, Windows and Tests project boundaries.
+- Dedicated Win32 hook thread with a bounded input channel.
+- Typed action outcomes for success, skip, cancellation, timeout and failure.
+- Versioned profile documents, migration diagnostics and backup recovery.
+- Automated tests for profile matching, shortcut parsing, execution coordination and storage.
 
 ### Changed
 - Profile storage now uses atomic temporary-file replacement.
 - Monitoring state is available from both the header and sidebar.
 - Process matching is now exact, supports `.exe` suffixes, and recognizes `*` as a global profile.
+- Explicit profiles now take precedence over wildcard profiles.
+- Keyboard injection now performs emergency key release after partial native sends.
+- CI now runs the complete unit-test suite after every Release build.
 
 ## 0.2.0-alpha - 2026-09-01
 

@@ -2,8 +2,14 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using MouseMind.App.Models;
 using MouseMind.App.Services;
+using MouseMind.Core.Actions;
+using MouseMind.Core.Configuration;
+using MouseMind.Core.Models;
+using MouseMind.Core.Profiles;
+using MouseMind.Windows.Actions;
+using MouseMind.Windows.Foreground;
+using MouseMind.Windows.Input;
 
 namespace MouseMind.App;
 
@@ -13,25 +19,36 @@ public partial class MainWindow : Window
     private readonly MouseHookService _mouseHook = new();
     private readonly ActionExecutionService _actions = new([new KeyboardShortcutExecutor()]);
     private readonly ProfileMatcher _profileMatcher = new();
+    private readonly ForegroundWindowService _foregroundWindow = new();
+    private readonly CancellationTokenSource _inputLifetime = new();
     private ObservableCollection<MouseProfile> _profiles = [];
     private MouseProfile? _selectedProfile;
+    private Task? _inputLoop;
+    private bool _canSaveProfiles = true;
     private int _sessionActionCount;
 
     public MainWindow()
     {
         InitializeComponent();
         Loaded += MainWindow_Loaded;
-        Closed += (_, _) => _mouseHook.Dispose();
-        _mouseHook.SideButtonPressed += MouseHook_SideButtonPressed;
+        Closed += MainWindow_Closed;
+        _mouseHook.Diagnostic += MouseHook_Diagnostic;
     }
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        _profiles = await _store.LoadAsync();
+        var loadResult = await _store.LoadAsync();
+        _profiles = loadResult.Profiles;
+        _canSaveProfiles = loadResult.CanSave;
         ProfileList.ItemsSource = _profiles;
         ProfileList.SelectedIndex = 0;
+        _inputLoop = ProcessMouseEventsAsync(_inputLifetime.Token);
         StartMonitoring();
         AddLog("MouseMind 已启动，配置已从本地加载。", "SYSTEM");
+        if (loadResult.Diagnostic is not null)
+            AddLog(loadResult.Diagnostic, loadResult.CanSave ? "RECOVER" : "READONLY");
+        if (loadResult.NeedsSave && loadResult.CanSave)
+            await SaveAsync();
         MotionService.Reveal(OverviewPanel, 7);
         MotionService.StartOrbit(SignalOrbit, 0, 360, 22);
         MotionService.StartOrbit(SignalOrbitReverse, 360, 0, 16);
@@ -57,7 +74,11 @@ public partial class MainWindow : Window
     {
         if (_mouseHook.IsRunning)
         {
-            _mouseHook.Stop();
+            if (!_mouseHook.Stop())
+            {
+                AddLog("鼠标监听未能安全停止，请查看输入诊断。", "ERROR");
+                return;
+            }
             MonitorText.Text = "监听已暂停";
             MonitorText.Foreground = Brushes.Gray;
             LiveDot.Fill = Brushes.Gray;
@@ -70,29 +91,55 @@ public partial class MainWindow : Window
         else { StartMonitoring(); AddLog("全局鼠标监听已开启。", "SYSTEM"); }
     }
 
-    private async void MouseHook_SideButtonPressed(object? sender, MouseSideButtonEventArgs e)
+    private async Task ProcessMouseEventsAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await foreach (var input in _mouseHook.ReadEventsAsync(cancellationToken))
+            {
+                var processName = _foregroundWindow.GetProcessName(input.ForegroundWindow);
+                await Dispatcher.InvokeAsync(() => HandleMouseInputAsync(input, processName)).Task.Unwrap();
+            }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Normal shutdown.
+        }
+        catch (Exception ex)
+        {
+            await Dispatcher.InvokeAsync(() => AddLog($"输入处理管线已停止：{ex.Message}", "ERROR"));
+        }
+    }
+
+    private async Task HandleMouseInputAsync(MouseInputEvent input, string processName)
     {
         MotionService.Pulse(SignalCore);
-        ForegroundAppText.Text = e.ProcessName;
-        DashboardAppText.Text = e.ProcessName;
-        var profile = FindProfile(e.ProcessName);
-        var mapping = profile?.Mappings.FirstOrDefault(m => m.Trigger == e.Button);
+        ForegroundAppText.Text = processName;
+        DashboardAppText.Text = processName;
+        var profile = FindProfile(processName);
+        var mapping = profile?.Mappings.FirstOrDefault(m => m.Trigger == input.Trigger);
         if (profile is not null)
         {
-            ProfileList.SelectedItem = profile;
+            DashboardProfileText.Text = profile.Name;
             if (mapping is null)
-                AddLog($"{e.Button} · 匹配“{profile.Name}”，暂无对应动作", "MOUSE");
+                AddLog($"{input.Trigger} · 匹配“{profile.Name}”，暂无对应动作", "MOUSE");
             else
             {
-                AddLog($"{e.Button} → {mapping.Action} · {profile.Name}", "MOUSE");
+                if (!_foregroundWindow.IsStillForeground(input.ForegroundWindow))
+                {
+                    AddLog($"{input.Trigger} · 目标窗口已切换，动作已取消", "STALE");
+                    return;
+                }
+
+                AddLog($"{input.Trigger} → {mapping.Action} · {profile.Name}", "MOUSE");
                 var result = await _actions.ExecuteAsync(mapping,
-                    new ActionContext(e.ProcessName, DateTimeOffset.Now));
+                    new ActionContext(processName, input.Timestamp), _inputLifetime.Token);
                 if (result.Success) IncrementSessionActions();
-                AddLog(result.Message, result.Success ? "ACTION" : "SKIP");
+                AddLog(result.Message, ResultLogType(result.Status));
                 ShowActionToast(result.Success, mapping.Action, result.Message);
             }
         }
-        else AddLog($"{e.Button} · {e.ProcessName} · 未匹配配置", "MOUSE");
+        else AddLog($"{input.Trigger} · {processName} · 未匹配配置", "MOUSE");
     }
 
     private MouseProfile? FindProfile(string processName) => _profileMatcher.Find(_profiles, processName);
@@ -141,9 +188,9 @@ public partial class MainWindow : Window
         if ((sender as Button)?.Tag is MouseMapping mapping)
         {
             var result = await _actions.ExecuteAsync(mapping,
-                new ActionContext("MouseMind", DateTimeOffset.Now));
+                new ActionContext("MouseMind", DateTimeOffset.Now), _inputLifetime.Token);
             if (result.Success) IncrementSessionActions();
-            AddLog(result.Message, result.Success ? "TEST" : "SKIP");
+            AddLog(result.Message, result.Success ? "TEST" : ResultLogType(result.Status));
             MotionService.Pulse(SignalCore);
             ShowActionToast(result.Success, mapping.Action, result.Message);
         }
@@ -237,5 +284,36 @@ public partial class MainWindow : Window
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
     private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 
-    private Task SaveAsync() => _store.SaveAsync(_profiles);
+    private static string ResultLogType(ActionStatus status) => status switch
+    {
+        ActionStatus.Cancelled => "CANCEL",
+        ActionStatus.TimedOut => "TIMEOUT",
+        ActionStatus.Failed => "ERROR",
+        ActionStatus.Skipped => "SKIP",
+        _ => "ACTION"
+    };
+
+    private void MouseHook_Diagnostic(object? sender, string message) =>
+        Dispatcher.BeginInvoke(() => AddLog(message, "INPUT"));
+
+    private void MainWindow_Closed(object? sender, EventArgs e)
+    {
+        _inputLifetime.Cancel();
+        _mouseHook.Diagnostic -= MouseHook_Diagnostic;
+        _mouseHook.Dispose();
+        _inputLifetime.Dispose();
+    }
+
+    private async Task SaveAsync()
+    {
+        if (!_canSaveProfiles)
+        {
+            AddLog("当前配置来自更高版本，已启用只读保护。", "READONLY");
+            return;
+        }
+
+        try { await _store.SaveAsync(_profiles, _inputLifetime.Token); }
+        catch (OperationCanceledException) when (_inputLifetime.IsCancellationRequested) { }
+        catch (Exception ex) { AddLog($"配置保存失败：{ex.Message}", "ERROR"); }
+    }
 }

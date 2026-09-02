@@ -1,5 +1,10 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/MouseMind.App/MouseMind.App.csproj" />
+    <Project Path="src/MouseMind.Core/MouseMind.Core.csproj" />
+    <Project Path="src/MouseMind.Windows/MouseMind.Windows.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MouseMind.Tests/MouseMind.Tests.csproj" />
   </Folder>
 </Solution>
