@@ -30,6 +30,9 @@
 - Reworked navigation, settings groups, profile rows, buttons and Toasts around one material hierarchy.
 - Removed permanent decorative rotation and reduced input pulse amplitude.
 - Toast dismissal now also works when Windows animations are disabled.
+- Simplified the overview into a compact current-context strip and one continuous activity surface.
+- Removed decorative in-app color blobs so the native desktop backdrop provides the material character.
+- Rebuilt profile selection as a rounded glass row with separate hover, selection and keyboard-focus states.
 
 ## 0.2.0-alpha - 2026-09-01
 
