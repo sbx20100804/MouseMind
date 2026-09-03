@@ -5,7 +5,7 @@
 
 [简体中文](README.zh-CN.md) · [English](README.en.md)
 
-[Development roadmap and TODO](TODO.md) · [Architecture](docs/ARCHITECTURE.md)
+[Development roadmap and TODO](TODO.md) · [Architecture](docs/ARCHITECTURE.md) · [Liquid Glass design](docs/LIQUID_GLASS.md)
 
 MouseMind turns standard mouse side buttons into application-aware actions. The same button can undo in a code editor, control a timeline in an editing app, or trigger an AI workflow in a browser.
 

@@ -1,20 +1,22 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Color x:Key="CanvasColor">#090A0F</Color>
-    <Color x:Key="SidebarColor">#0D0F16</Color>
-    <Color x:Key="SurfaceColor">#12151E</Color>
-    <Color x:Key="SurfaceHighColor">#191D28</Color>
-    <Color x:Key="ElevatedColor">#202532</Color>
-    <Color x:Key="PrimaryColor">#8172F3</Color>
-    <Color x:Key="PrimaryHoverColor">#9487FF</Color>
-    <Color x:Key="SuccessColor">#4ED6B1</Color>
-    <Color x:Key="WarningColor">#F3B85B</Color>
-    <Color x:Key="ErrorColor">#F07883</Color>
-    <Color x:Key="TextPrimaryColor">#F5F7FC</Color>
-    <Color x:Key="TextSecondaryColor">#A4AABC</Color>
-    <Color x:Key="TextTertiaryColor">#737A8F</Color>
+    <!-- MouseMind Liquid Glass: neutral material first, color only for state and action. -->
+    <Color x:Key="CanvasColor">#CC111318</Color>
+    <Color x:Key="SidebarColor">#7015171D</Color>
+    <Color x:Key="SurfaceColor">#731F222A</Color>
+    <Color x:Key="SurfaceHighColor">#8A292C35</Color>
+    <Color x:Key="ElevatedColor">#A6343741</Color>
+    <Color x:Key="PrimaryColor">#006EDC</Color>
+    <Color x:Key="PrimaryHoverColor">#2997FF</Color>
+    <Color x:Key="SuccessColor">#30D158</Color>
+    <Color x:Key="WarningColor">#FFD60A</Color>
+    <Color x:Key="ErrorColor">#FF453A</Color>
+    <Color x:Key="TextPrimaryColor">#F5F5F7</Color>
+    <Color x:Key="TextSecondaryColor">#B5B5BA</Color>
+    <Color x:Key="TextTertiaryColor">#85858C</Color>
 
     <SolidColorBrush x:Key="CanvasBrush" Color="{StaticResource CanvasColor}"/>
+    <SolidColorBrush x:Key="WindowFallbackBrush" Color="#FF17181D"/>
     <SolidColorBrush x:Key="SidebarBrush" Color="{StaticResource SidebarColor}"/>
     <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}"/>
     <SolidColorBrush x:Key="SurfaceHighBrush" Color="{StaticResource SurfaceHighColor}"/>
@@ -27,32 +29,42 @@
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>
     <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}"/>
     <SolidColorBrush x:Key="TextTertiaryBrush" Color="{StaticResource TextTertiaryColor}"/>
-    <SolidColorBrush x:Key="HairlineBrush" Color="#14FFFFFF"/>
+    <SolidColorBrush x:Key="HairlineBrush" Color="#26FFFFFF"/>
+    <SolidColorBrush x:Key="GlassHighlightBrush" Color="#18FFFFFF"/>
 
     <LinearGradientBrush x:Key="CanvasGradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#0B0D14" Offset="0"/>
-        <GradientStop Color="#090A0F" Offset="0.55"/>
-        <GradientStop Color="#100D1A" Offset="1"/>
+        <GradientStop Color="#B913151A" Offset="0"/>
+        <GradientStop Color="#C00E1015" Offset="0.54"/>
+        <GradientStop Color="#B9171920" Offset="1"/>
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="HeroGradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#272248" Offset="0"/>
-        <GradientStop Color="#171A27" Offset="0.62"/>
-        <GradientStop Color="#142520" Offset="1"/>
+        <GradientStop Color="#9E2A3440" Offset="0"/>
+        <GradientStop Color="#8622262E" Offset="0.58"/>
+        <GradientStop Color="#7823312E" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="GlassTopEdge" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#36FFFFFF" Offset="0"/>
+        <GradientStop Color="#08FFFFFF" Offset="0.18"/>
+        <GradientStop Color="#16FFFFFF" Offset="1"/>
     </LinearGradientBrush>
 
     <FontFamily x:Key="UiFont">Segoe UI Variable Text, Segoe UI</FontFamily>
     <FontFamily x:Key="DisplayFont">Segoe UI Variable Display, Segoe UI</FontFamily>
     <FontFamily x:Key="MonoFont">Cascadia Code, Consolas</FontFamily>
 
+    <DropShadowEffect x:Key="GlassShadow" Color="#000000" BlurRadius="34" ShadowDepth="12" Opacity="0.28"/>
+    <DropShadowEffect x:Key="FloatingShadow" Color="#000000" BlurRadius="22" ShadowDepth="8" Opacity="0.22"/>
+
     <Style TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
         <Setter Property="FontFamily" Value="{StaticResource UiFont}"/>
         <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
     </Style>
 
     <Style x:Key="PageTitle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource DisplayFont}"/>
-        <Setter Property="FontSize" Value="30"/>
+        <Setter Property="FontSize" Value="32"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
     </Style>
@@ -60,6 +72,7 @@
         <Setter Property="FontFamily" Value="{StaticResource DisplayFont}"/>
         <Setter Property="FontSize" Value="17"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
     </Style>
     <Style x:Key="Caption" TargetType="TextBlock">
         <Setter Property="FontSize" Value="12"/>
@@ -68,32 +81,40 @@
 
     <Style x:Key="Card" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource HairlineBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource GlassTopEdge}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="CornerRadius" Value="14"/>
-        <Setter Property="Padding" Value="20"/>
+        <Setter Property="CornerRadius" Value="18"/>
+        <Setter Property="Padding" Value="22"/>
+    </Style>
+    <Style x:Key="InsetGlass" TargetType="Border">
+        <Setter Property="Background" Value="#381C1F26"/>
+        <Setter Property="BorderBrush" Value="#1FFFFFFF"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="13"/>
+        <Setter Property="Padding" Value="14"/>
     </Style>
 
     <Style x:Key="PrimaryButton" TargetType="Button">
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="Padding" Value="17,10"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="13"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="9"
-                            Padding="{TemplateBinding Padding}" BorderBrush="#50B8ADFF" BorderThickness="1">
+                    <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="10"
+                            Padding="{TemplateBinding Padding}" BorderBrush="#42FFFFFF" BorderThickness="1">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="{StaticResource PrimaryHoverBrush}"/></Trigger>
-                        <Trigger Property="IsPressed" Value="True"><Setter TargetName="Chrome" Property="Opacity" Value="0.82"/></Trigger>
-                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="#D8FFFFFF"/></Trigger>
-                        <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Chrome" Property="Opacity" Value="0.45"/></Trigger>
+                        <Trigger Property="IsPressed" Value="True"><Setter TargetName="Chrome" Property="Opacity" Value="0.72"/></Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="White"/><Setter TargetName="Chrome" Property="BorderThickness" Value="2"/></Trigger>
+                        <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Chrome" Property="Opacity" Value="0.42"/></Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -101,18 +122,18 @@
     </Style>
 
     <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
-        <Setter Property="Background" Value="{StaticResource ElevatedBrush}"/>
+        <Setter Property="Background" Value="#16FFFFFF"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="9"
-                            Padding="{TemplateBinding Padding}" BorderBrush="{StaticResource HairlineBrush}" BorderThickness="1">
+                    <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="10"
+                            Padding="{TemplateBinding Padding}" BorderBrush="#26FFFFFF" BorderThickness="1">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#2A3040"/><Setter TargetName="Chrome" Property="BorderBrush" Value="#28FFFFFF"/></Trigger>
-                        <Trigger Property="IsPressed" Value="True"><Setter TargetName="Chrome" Property="Opacity" Value="0.8"/></Trigger>
-                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource PrimaryHoverBrush}"/></Trigger>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#25FFFFFF"/><Setter TargetName="Chrome" Property="BorderBrush" Value="#40FFFFFF"/></Trigger>
+                        <Trigger Property="IsPressed" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#0FFFFFFF"/></Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource PrimaryHoverBrush}"/><Setter TargetName="Chrome" Property="BorderThickness" Value="2"/></Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -123,15 +144,16 @@
         <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Padding" Value="14,11"/>
+        <Setter Property="Padding" Value="13,10"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="9" Padding="{TemplateBinding Padding}" BorderBrush="Transparent" BorderThickness="1">
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                    <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="9"
+                            Padding="{TemplateBinding Padding}" BorderBrush="Transparent" BorderThickness="1">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#10FFFFFF"/><Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/></Trigger>
@@ -143,23 +165,18 @@
     </Style>
     <Style x:Key="ActiveNavButton" TargetType="Button" BasedOn="{StaticResource NavButton}">
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="#211E36"/>
+        <Setter Property="Background" Value="#22FFFFFF"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid>
-                        <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="9"
-                                BorderBrush="#247C6CF2" BorderThickness="1"/>
-                        <Border Width="3" Height="20" HorizontalAlignment="Left" Margin="1,0,0,0"
-                                Background="{StaticResource PrimaryHoverBrush}" CornerRadius="0,3,3,0">
-                            <Border.Effect><DropShadowEffect Color="#8172F3" BlurRadius="9" ShadowDepth="0" Opacity="0.55"/></Border.Effect>
-                        </Border>
-                        <ContentPresenter Margin="14,11" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    </Grid>
+                    <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="9"
+                            Padding="{TemplateBinding Padding}" BorderBrush="#20FFFFFF" BorderThickness="1">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#292541"/></Trigger>
-                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="#A88172F3"/></Trigger>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#2CFFFFFF"/></Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/></Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -172,22 +189,31 @@
         <Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Cursor" Value="Hand"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
-            <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="7"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
-            <ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#16FFFFFF"/><Setter Property="Foreground" Value="White"/></Trigger></ControlTemplate.Triggers>
+            <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="8" BorderBrush="Transparent" BorderThickness="1"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#14FFFFFF"/><Setter Property="Foreground" Value="White"/></Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/></Trigger>
+            </ControlTemplate.Triggers>
         </ControlTemplate></Setter.Value></Setter>
     </Style>
 
     <Style x:Key="Switch" TargetType="CheckBox">
-        <Setter Property="Width" Value="44"/><Setter Property="Height" Value="24"/>
+        <Setter Property="Width" Value="46"/><Setter Property="Height" Value="26"/>
         <Setter Property="Cursor" Value="Hand"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="CheckBox">
-            <Grid><Border x:Name="Track" Background="#343949" CornerRadius="12" BorderBrush="#18FFFFFF" BorderThickness="1"/>
-                <Ellipse x:Name="Thumb" Width="18" Height="18" Fill="#D7DAE4" HorizontalAlignment="Left" Margin="3,0,0,0"/>
+            <Grid><Border x:Name="Track" Background="#36FFFFFF" CornerRadius="13" BorderBrush="#18FFFFFF" BorderThickness="1"/>
+                <Ellipse x:Name="Thumb" Width="20" Height="20" Fill="#F5F5F7" HorizontalAlignment="Left" Margin="3,0,0,0"><Ellipse.Effect><DropShadowEffect Color="#000000" BlurRadius="4" ShadowDepth="1" Opacity="0.38"/></Ellipse.Effect></Ellipse>
             </Grid>
             <ControlTemplate.Triggers>
-                <Trigger Property="IsChecked" Value="True"><Setter TargetName="Track" Property="Background" Value="{StaticResource PrimaryBrush}"/><Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/><Setter TargetName="Thumb" Property="Margin" Value="0,0,3,0"/><Setter TargetName="Thumb" Property="Fill" Value="White"/></Trigger>
-                <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Track" Property="BorderBrush" Value="White"/></Trigger>
+                <Trigger Property="IsChecked" Value="True"><Setter TargetName="Track" Property="Background" Value="{StaticResource SuccessBrush}"/><Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/><Setter TargetName="Thumb" Property="Margin" Value="0,0,3,0"/></Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Track" Property="BorderBrush" Value="White"/><Setter TargetName="Track" Property="BorderThickness" Value="2"/></Trigger>
+                <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.4"/></Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate></Setter.Value></Setter>
+    </Style>
+
+    <Style TargetType="ScrollBar">
+        <Setter Property="Width" Value="7"/>
+        <Setter Property="Background" Value="Transparent"/>
     </Style>
 </ResourceDictionary>

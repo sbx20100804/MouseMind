@@ -15,6 +15,9 @@
 - Typed action outcomes for success, skip, cancellation, timeout and failure.
 - Versioned profile documents, migration diagnostics and backup recovery.
 - Automated tests for profile matching, shortcut parsing, execution coordination and storage.
+- Native Windows Desktop Acrylic with Mica Alt, Mica and solid fallbacks.
+- Liquid Glass material tokens and a restrained Context Lens visual.
+- Accessible names for title-bar controls and switches.
 
 ### Changed
 - Profile storage now uses atomic temporary-file replacement.
@@ -23,6 +26,10 @@
 - Explicit profiles now take precedence over wildcard profiles.
 - Keyboard injection now performs emergency key release after partial native sends.
 - CI now runs the complete unit-test suite after every Release build.
+- Replaced the neon Prism dashboard with a calmer translucent control surface.
+- Reworked navigation, settings groups, profile rows, buttons and Toasts around one material hierarchy.
+- Removed permanent decorative rotation and reduced input pulse amplitude.
+- Toast dismissal now also works when Windows animations are disabled.
 
 ## 0.2.0-alpha - 2026-09-01
 

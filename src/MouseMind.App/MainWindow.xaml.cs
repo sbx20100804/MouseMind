@@ -30,6 +30,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        SourceInitialized += (_, _) => WindowBackdropService.Apply(this);
         Loaded += MainWindow_Loaded;
         Closed += MainWindow_Closed;
         _mouseHook.Diagnostic += MouseHook_Diagnostic;
@@ -50,8 +51,6 @@ public partial class MainWindow : Window
         if (loadResult.NeedsSave && loadResult.CanSave)
             await SaveAsync();
         MotionService.Reveal(OverviewPanel, 7);
-        MotionService.StartOrbit(SignalOrbit, 0, 360, 22);
-        MotionService.StartOrbit(SignalOrbitReverse, 360, 0, 16);
     }
 
     private void StartMonitoring()
@@ -242,10 +241,10 @@ public partial class MainWindow : Window
 
         (PageHeader.Text, PageDescription.Text) = destination switch
         {
-            "Profiles" => ("应用配置", "为不同应用分配专属鼠标动作。"),
-            "Activity" => ("活动记录", "观察配置匹配、输入触发与动作结果。"),
+            "Profiles" => ("应用配置", "为每个应用设置刚刚好的侧键动作。"),
+            "Activity" => ("活动记录", "查看匹配、输入与动作结果。"),
             "Settings" => ("设置", "调整 MouseMind 的行为、外观与数据。"),
-            _ => ("概览", "你的鼠标工作流，正在安静运行。")
+            _ => ("概览", "你的鼠标，已经准备好了。")
         };
 
         MotionService.Reveal(nextPanel);

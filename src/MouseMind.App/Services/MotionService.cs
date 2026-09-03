@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace MouseMind.App.Services;
 
@@ -13,7 +14,7 @@ public static class MotionService
         EasingMode = EasingMode.EaseOut
     };
 
-    public static void Reveal(FrameworkElement element, double distance = 10)
+    public static void Reveal(FrameworkElement element, double distance = 6)
     {
         if (!IsEnabled)
         {
@@ -54,8 +55,8 @@ public static class MotionService
 
         var frames = new DoubleAnimationUsingKeyFrames();
         frames.KeyFrames.Add(new EasingDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.Zero)));
-        frames.KeyFrames.Add(new EasingDoubleKeyFrame(1.075, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(90)), EnterEase));
-        frames.KeyFrames.Add(new EasingDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(260)), EnterEase));
+        frames.KeyFrames.Add(new EasingDoubleKeyFrame(1.035, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(80)), EnterEase));
+        frames.KeyFrames.Add(new EasingDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(210)), EnterEase));
         scale.BeginAnimation(ScaleTransform.ScaleXProperty, frames);
         scale.BeginAnimation(ScaleTransform.ScaleYProperty, frames.Clone());
     }
@@ -68,16 +69,24 @@ public static class MotionService
         if (!IsEnabled)
         {
             element.Opacity = 1;
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(2200) };
+            timer.Tick += (_, _) =>
+            {
+                timer.Stop();
+                element.Visibility = Visibility.Collapsed;
+                completed?.Invoke();
+            };
+            timer.Start();
             return;
         }
 
-        var translate = new TranslateTransform(0, 14);
+        var translate = new TranslateTransform(0, 8);
         element.RenderTransform = translate;
         var opacity = new DoubleAnimationUsingKeyFrames();
         opacity.KeyFrames.Add(new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.Zero)));
-        opacity.KeyFrames.Add(new EasingDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(150)), EnterEase));
+        opacity.KeyFrames.Add(new EasingDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(180)), EnterEase));
         opacity.KeyFrames.Add(new DiscreteDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(2100))));
-        opacity.KeyFrames.Add(new EasingDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(2280)), EnterEase));
+        opacity.KeyFrames.Add(new EasingDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(2260)), EnterEase));
         opacity.Completed += (_, _) =>
         {
             element.Visibility = Visibility.Collapsed;
@@ -85,6 +94,6 @@ public static class MotionService
         };
         element.BeginAnimation(UIElement.OpacityProperty, opacity);
         translate.BeginAnimation(TranslateTransform.YProperty,
-            new DoubleAnimation(14, 0, TimeSpan.FromMilliseconds(210)) { EasingFunction = EnterEase });
+            new DoubleAnimation(8, 0, TimeSpan.FromMilliseconds(200)) { EasingFunction = EnterEase });
     }
 }
