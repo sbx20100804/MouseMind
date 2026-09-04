@@ -42,6 +42,7 @@ public partial class MainWindow : Window
         _profiles = loadResult.Profiles;
         _canSaveProfiles = loadResult.CanSave;
         ProfileList.ItemsSource = _profiles;
+        DashboardProfilesList.ItemsSource = _profiles;
         ProfileList.SelectedIndex = 0;
         _inputLoop = ProcessMouseEventsAsync(_inputLifetime.Token);
         StartMonitoring();
@@ -120,6 +121,7 @@ public partial class MainWindow : Window
         if (profile is not null)
         {
             DashboardProfileText.Text = profile.Name;
+            DashboardMappingSummaryText.Text = GetMappingSummary(profile);
             if (mapping is null)
                 AddLog($"{input.Trigger} · 匹配“{profile.Name}”，暂无对应动作", "MOUSE");
             else
@@ -150,6 +152,7 @@ public partial class MainWindow : Window
         ProfileTitle.Text = _selectedProfile.Name;
         ProfileSubtitle.Text = $"当前匹配：{_selectedProfile.ProcessName}";
         DashboardProfileText.Text = _selectedProfile.Name;
+        DashboardMappingSummaryText.Text = GetMappingSummary(_selectedProfile);
         ProfileEnabled.IsChecked = _selectedProfile.IsEnabled;
         MappingList.ItemsSource = _selectedProfile.Mappings;
     }
@@ -160,6 +163,7 @@ public partial class MainWindow : Window
         _selectedProfile.IsEnabled = ProfileEnabled.IsChecked == true;
         await SaveAsync();
         ProfileList.Items.Refresh();
+        DashboardProfilesList.Items.Refresh();
         AddLog($"配置“{_selectedProfile.Name}”已{(_selectedProfile.IsEnabled ? "启用" : "停用")}。", "CONFIG");
     }
 
@@ -179,6 +183,8 @@ public partial class MainWindow : Window
         _selectedProfile.Mappings.Add(new MouseMapping { Trigger = "侧键 1", Action = "新动作", Description = "待配置" });
         await SaveAsync();
         ProfileList.Items.Refresh();
+        DashboardProfilesList.Items.Refresh();
+        DashboardMappingSummaryText.Text = GetMappingSummary(_selectedProfile);
         AddLog($"已向“{_selectedProfile.Name}”添加动作。", "CONFIG");
     }
 
@@ -199,6 +205,7 @@ public partial class MainWindow : Window
     {
         EventLog.Items.Clear();
         DashboardActivityList.Items.Clear();
+        DashboardActivityHint.Visibility = Visibility.Visible;
     }
 
     private void AddLog(string message, string type = "INFO")
@@ -209,6 +216,9 @@ public partial class MainWindow : Window
         while (EventLog.Items.Count > 50) EventLog.Items.RemoveAt(EventLog.Items.Count - 1);
         while (DashboardActivityList.Items.Count > 5)
             DashboardActivityList.Items.RemoveAt(DashboardActivityList.Items.Count - 1);
+        DashboardActivityHint.Visibility = DashboardActivityList.Items.Count <= 1
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 
     private void IncrementSessionActions()
@@ -220,6 +230,18 @@ public partial class MainWindow : Window
     private void Navigation_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not Button { Tag: string destination }) return;
+        NavigateTo(destination);
+    }
+
+    private void QuickProfile_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: MouseProfile profile }) return;
+        ProfileList.SelectedItem = profile;
+        NavigateTo("Profiles");
+    }
+
+    private void NavigateTo(string destination)
+    {
 
         FrameworkElement nextPanel = destination switch
         {
@@ -248,6 +270,14 @@ public partial class MainWindow : Window
         };
 
         MotionService.Reveal(nextPanel);
+    }
+
+    private static string GetMappingSummary(MouseProfile profile)
+    {
+        var mappings = profile.Mappings.Take(2)
+            .Select(mapping => $"{mapping.Trigger}：{mapping.Action}")
+            .ToArray();
+        return mappings.Length == 0 ? "尚未配置侧键动作" : string.Join("  ·  ", mappings);
     }
 
     private void ShowActionToast(bool success, string title, string message)

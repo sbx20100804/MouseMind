@@ -33,6 +33,10 @@
 - Simplified the overview into a compact current-context strip and one continuous activity surface.
 - Removed decorative in-app color blobs so the native desktop backdrop provides the material character.
 - Rebuilt profile selection as a rounded glass row with separate hover, selection and keyboard-focus states.
+- Replaced static quick-switch mock data with live profile bindings.
+- Added real action summaries to the current-context strip.
+- Turned sparse activity space into an intentional timeline surface with retention guidance.
+- Added a calm contextual empty state that disappears as real mouse activity arrives.
 
 ## 0.2.0-alpha - 2026-09-01
 

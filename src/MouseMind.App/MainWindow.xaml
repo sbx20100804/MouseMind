@@ -108,7 +108,7 @@
                                         <TextBlock x:Name="DashboardProfileText" Text="浏览与阅读" FontFamily="{StaticResource DisplayFont}" FontSize="25" FontWeight="SemiBold" Margin="0,5,0,0"/>
                                         <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
                                             <Ellipse Width="7" Height="7" Fill="{StaticResource SuccessBrush}" Margin="0,0,8,0"/>
-                                            <TextBlock Text="侧键 1：主要动作  ·  侧键 2：辅助动作" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                            <TextBlock x:Name="DashboardMappingSummaryText" Text="侧键 1：主要动作  ·  侧键 2：辅助动作" Foreground="{StaticResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
                                         </StackPanel>
                                     </StackPanel>
 
@@ -118,9 +118,21 @@
 
                             <Border Grid.Row="2" Style="{StaticResource Card}" Padding="0">
                                 <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="1.5*"/><ColumnDefinition/></Grid.ColumnDefinitions>
-                                    <Grid Margin="24"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+                                    <Grid Margin="24"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                                         <Grid><StackPanel><TextBlock Text="最近活动" Style="{StaticResource SectionTitle}"/><TextBlock Text="动作结果与输入诊断" Style="{StaticResource Caption}" Margin="0,4,0,0"/></StackPanel><StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"><TextBlock x:Name="SessionActionCountText" Text="0 次动作" Style="{StaticResource Caption}" VerticalAlignment="Center" Margin="0,0,12,0"/><Button Content="查看全部" Style="{StaticResource SecondaryButton}" Padding="12,7" Tag="Activity" Click="Navigation_Click"/></StackPanel></Grid>
-                                        <ListBox Grid.Row="1" x:Name="DashboardActivityList" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,18,0,0" IsHitTestVisible="False"/>
+                                        <Grid Grid.Row="1" Margin="0,18,0,12">
+                                            <ListBox x:Name="DashboardActivityList" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" IsHitTestVisible="False" VerticalAlignment="Top">
+                                                <ListBox.ItemTemplate><DataTemplate><Border BorderBrush="#12FFFFFF" BorderThickness="0,0,0,1" Padding="0,9"><TextBlock Text="{Binding}" Foreground="{StaticResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis"/></Border></DataTemplate></ListBox.ItemTemplate>
+                                            </ListBox>
+                                            <StackPanel x:Name="DashboardActivityHint" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" Opacity="0.7">
+                                                <Border Width="48" Height="48" CornerRadius="24" Background="#10FFFFFF" BorderBrush="#14FFFFFF" BorderThickness="1" HorizontalAlignment="Center">
+                                                    <Path Data="M5,12 H8 L10,7 L13,17 L15,12 H19" Stroke="{StaticResource TextTertiaryBrush}" StrokeThickness="1.5" StrokeLineJoin="Round" Width="23" Height="23" Stretch="Uniform"/>
+                                                </Border>
+                                                <TextBlock Text="等待下一次鼠标动作" HorizontalAlignment="Center" FontWeight="SemiBold" Margin="0,12,0,0"/>
+                                                <TextBlock Text="触发侧键后，结果会出现在这里" Style="{StaticResource Caption}" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock Grid.Row="2" Text="最近 50 条记录 · 仅保存在这台电脑上" Style="{StaticResource Caption}" FontSize="11"/>
                                     </Grid>
 
                                     <Border Grid.Column="1" BorderBrush="#1FFFFFFF" BorderThickness="1,0,0,0" Padding="24">
@@ -128,15 +140,17 @@
                                             <TextBlock Text="快速切换" Style="{StaticResource SectionTitle}"/>
                                             <TextBlock Text="应用会自动匹配，也可以从这里管理。" Style="{StaticResource Caption}" Margin="0,4,0,18"/>
 
-                                            <Button Style="{StaticResource NavButton}" Tag="Profiles" Click="Navigation_Click" Margin="-10,0,-10,4">
-                                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Border Width="34" Height="34" CornerRadius="10" Background="#1C006EDC"><Path Data="M4,4 H16 V8 H4 Z M4,11 H16 V16 H4 Z" Stroke="{StaticResource PrimaryBrush}" StrokeThickness="1.4" Width="16" Height="16" Stretch="Uniform"/></Border><StackPanel Grid.Column="1" Margin="11,0"><TextBlock Text="浏览与阅读" FontWeight="SemiBold"/><TextBlock Text="浏览器 · 3 个动作" Style="{StaticResource Caption}" FontSize="11" Margin="0,3,0,0"/></StackPanel><TextBlock Grid.Column="2" Text="›" FontSize="20" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/></Grid>
-                                            </Button>
-                                            <Button Style="{StaticResource NavButton}" Tag="Profiles" Click="Navigation_Click" Margin="-10,0,-10,4">
-                                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Border Width="34" Height="34" CornerRadius="10" Background="#1C30D158"><Path Data="M5,5 H15 V15 H5 Z M8,8 H12 V12 H8 Z" Stroke="{StaticResource SuccessBrush}" StrokeThickness="1.4" Width="16" Height="16" Stretch="Uniform"/></Border><StackPanel Grid.Column="1" Margin="11,0"><TextBlock Text="代码工作台" FontWeight="SemiBold"/><TextBlock Text="编辑器 · 2 个动作" Style="{StaticResource Caption}" FontSize="11" Margin="0,3,0,0"/></StackPanel><TextBlock Grid.Column="2" Text="›" FontSize="20" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/></Grid>
-                                            </Button>
-                                            <Button Style="{StaticResource NavButton}" Tag="Profiles" Click="Navigation_Click" Margin="-10,0,-10,0">
-                                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Border Width="34" Height="34" CornerRadius="10" Background="#1CFFD60A"><Path Data="M4,6 H16 V14 H4 Z M8,4 V16" Stroke="{StaticResource WarningBrush}" StrokeThickness="1.4" Width="16" Height="16" Stretch="Uniform"/></Border><StackPanel Grid.Column="1" Margin="11,0"><TextBlock Text="视频剪辑" FontWeight="SemiBold"/><TextBlock Text="时间线 · 3 个动作" Style="{StaticResource Caption}" FontSize="11" Margin="0,3,0,0"/></StackPanel><TextBlock Grid.Column="2" Text="›" FontSize="20" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/></Grid>
-                                            </Button>
+                                            <ItemsControl x:Name="DashboardProfilesList">
+                                                <ItemsControl.ItemTemplate><DataTemplate>
+                                                    <Button Style="{StaticResource NavButton}" Tag="{Binding}" Click="QuickProfile_Click" Margin="-10,0,-10,4" AutomationProperties.Name="{Binding Name}">
+                                                        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                            <Border Width="34" Height="34" CornerRadius="10" Background="#14FFFFFF"><Grid><Ellipse Width="10" Height="10" Fill="{Binding Accent}"/><Ellipse Width="18" Height="18" Stroke="#24FFFFFF" StrokeThickness="1"/></Grid></Border>
+                                                            <StackPanel Grid.Column="1" Margin="11,0"><TextBlock Text="{Binding Name}" FontWeight="SemiBold"/><TextBlock Text="{Binding MappingSummary}" Style="{StaticResource Caption}" FontSize="11" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/></StackPanel>
+                                                            <TextBlock Grid.Column="2" Text="›" FontSize="20" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                                                        </Grid>
+                                                    </Button>
+                                                </DataTemplate></ItemsControl.ItemTemplate>
+                                            </ItemsControl>
                                         </StackPanel>
                                     </Border>
                                 </Grid>
