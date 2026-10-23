@@ -18,6 +18,7 @@ public static class ShortcutParser
         var parsed = new List<ushort>();
         keys = parsed;
         error = "";
+        if (string.IsNullOrWhiteSpace(shortcut)) { error = "快捷键内容为空。"; return false; }
         var tokens = shortcut.Split('+', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
         if (tokens.Length == 0) { error = "快捷键内容为空。"; return false; }
 
