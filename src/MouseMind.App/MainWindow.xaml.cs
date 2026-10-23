@@ -38,7 +38,20 @@ public partial class MainWindow : Window
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        var loadResult = await _store.LoadAsync();
+        ProfileLoadResult loadResult;
+        try
+        {
+            loadResult = await _store.LoadAsync();
+        }
+        catch (Exception ex)
+        {
+            loadResult = new ProfileLoadResult(
+                new ObservableCollection<MouseProfile>(),
+                ProfileLoadOutcome.DefaultsAfterFailure,
+                NeedsSave: false,
+                CanSave: false,
+                Diagnostic: $"配置加载出现未预期异常，已进入只读保护（磁盘文件未改动）：{ex.Message}");
+        }
         _profiles = loadResult.Profiles;
         _canSaveProfiles = loadResult.CanSave;
         ProfileList.ItemsSource = _profiles;
@@ -160,7 +173,9 @@ public partial class MainWindow : Window
     private async void ProfileEnabled_Changed(object sender, RoutedEventArgs e)
     {
         if (_selectedProfile is null) return;
-        _selectedProfile.IsEnabled = ProfileEnabled.IsChecked == true;
+        var isEnabled = ProfileEnabled.IsChecked == true;
+        if (_selectedProfile.IsEnabled == isEnabled) return;
+        _selectedProfile.IsEnabled = isEnabled;
         await SaveAsync();
         ProfileList.Items.Refresh();
         DashboardProfilesList.Items.Refresh();
