@@ -12,7 +12,11 @@ public sealed class ForegroundWindowService
     public string GetProcessName(nint window)
     {
         GetWindowThreadProcessId(window, out var processId);
-        try { return Process.GetProcessById((int)processId).ProcessName; }
+        try
+        {
+            using var process = Process.GetProcessById((int)processId);
+            return process.ProcessName;
+        }
         catch { return "未知应用"; }
     }
 
